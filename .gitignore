@@ -1,0 +1,26 @@
+# macOS
+*.DS_Store
+
+# Test files
+.cache/
+
+# Python module things
+*.pyc
+
+# Python cache stuff
+__pycache__
+dist
+build
+.idea
+
+# Environment
+venv
+
+# VS Code
+.vscode
+
+# Personal
+game/game.db
+test.py
+game/templates/FUTURE
+game/config.py

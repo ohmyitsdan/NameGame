@@ -1,0 +1,142 @@
+{% extends "layout.html" %} {% block top_scripts %}{% endblock top_scripts %} {%
+block content %}
+
+<div class="container">
+    <div id="room" class="invisible">{{ roomCode }}</div>
+    <div class="teams">
+        <div class="row">
+            <div class="col mx-auto">
+                <div class="card text-white bg-success mb-3 mx-auto">
+                    <div class="card-body">
+                        <h5 class="card-title mx-auto text-white text-center">Green Team</h5>
+                        <div id="team1" class="text-center"></div>
+                    </div>
+                </div>
+                <button type="button" id="0" class="btn btn-outline-success btn-block" onclick="addToTeam(1)">
+                    Join Team
+                </button>
+            </div>
+            <div class="noteamcol">
+                <div class="col">
+                    <div class="card bg-light mb-3 btn-block">
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <div id="noteam"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title text-white text-center">Red Team</h5>
+                        <div id="team2" class="text-center"></div>
+                    </div>
+                </div>
+                <button type="button" id="1" class="btn btn-outline-danger btn-block" onclick="addToTeam(2)">
+                    Join Team
+                </button>
+            </div>
+        </div>
+    </div>
+<div class="starting">
+    <div class="rounded-circle bg-primary account-img mb-5">
+        <h1 id="start-timer" class="text-white timer"></h1>
+    </div>
+</div>
+</div>
+
+<div class="ready-button">
+<div class="row">
+    <div class="col d-inline-flex p-2 justify-content-center">
+        <div id="ready-button" class="invisible">
+            <a onclick="goPlay()">
+                <button class="btn btn-outline-info mb-3 mt-3">
+                    Ready to Go
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="border-top pt-3">
+    <small class="test-muted">
+        <a class="ml-2" href="{{ url_for('home') }}">Back to Home</a>
+    </small>
+</div>
+</div>
+
+{% endblock content %}
+{% block bottom_scripts %}
+<script>
+    let currentState = null,
+        pollingInterval;
+    let roomCode = document.getElementById("room").innerHTML;
+
+    $('.starting').hide();
+
+    jQuery(document).ready(function ($) {
+        pollingInterval = setInterval(function () {
+            intervalPoll();
+        }, 1000);
+
+        function nameList(divId, team) {
+            let post = document.getElementById(divId);
+            post.innerHTML = "";
+            for (var i = 0; i < team.length; ++i) {
+                let para = document.createElement("p");
+                para.className = "text-center";
+                let name = team[i];
+                para.append(name);
+                post.appendChild(para);
+            }
+        }
+
+        function intervalPoll() {
+            $.get("/poll", function (response) {
+                console.log(response);  
+                currentState = response.current_state;
+                if (currentState == "go") {
+                    // clear interval
+                    clearInterval(pollingInterval);
+                    console.log("Polling Stopped");
+                    window.location.replace("/play/" + roomCode);
+                }
+                if (response.team_one) {
+                    nameList("noteam", response.no_team);
+                    nameList("team1", response.team_one);
+                    nameList("team2", response.team_two);
+                }
+
+                if (currentState === "ready") {
+                    // show ready button
+                    let rbtn = document.getElementById("ready-button");
+                    rbtn.classList.remove("invisible");
+                    // noteamcol.classList.add("invisible");
+                    $('.noteamcol').hide();
+                }
+                if (currentState === "starting") {
+                    $('.teams').hide();
+                    $('.ready-button').hide();
+                    $('.starting').show();
+                    let timer = document.getElementById("start-timer");
+                    timer.innerHTML = response.timer
+                }
+            })
+        }
+    
+    });
+    function addToTeam(team) {
+        $.get("/setTeam/" + team, function (response) {
+            console.log(response);
+        });
+    }
+    function goPlay() {
+        $.get("/initPlay/" + roomCode, function (response) {
+            console.log("init Called");
+            console.log(response);
+        });
+    }
+</script>
+{% endblock bottom_scripts %}

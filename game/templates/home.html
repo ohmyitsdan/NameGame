@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <!-- <legend class="border-bottom mb-4">Name Game</legend> -->
+            <div class="form-group">
+                {{ form.roomcode.label(class="form-control-label") }}
+                {{ form.roomcode(class="form-control form-control-lg", placeholder="Enter 4-Letter Room Code") }}
+            </div>
+            <div class="form-group">
+                {{ form.username.label(class="form-control-label") }}
+                {{ form.username(class="form-control form-control-lg", placeholder="Enter Your Name") }}
+            </div>
+            
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<div class="border-top pt-3">
+    <small class="test-muted">
+        <a class="btn btn-outline-info" href="{{ url_for('create') }}">Create a New Game</a>
+    </small>
+</div>
+{% endblock content %}

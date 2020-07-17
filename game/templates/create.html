@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <div class="form-group">
+                {{ form.username.label(class="form-control-label") }}
+                {{ form.username(class="form-control form-control-lg", placeholder="Enter Your Name") }}
+            </div>
+            <div class="form-group">
+                {{ form.guess_num.label(class="form-control-label") }}
+                {{ form.guess_num(class="form-control form-control-lg", placeholder="Enter Number to add to bowl") }}
+            </div>
+            <div class="form-group">
+                {{ form.timerem.label(class="form-control-label") }}
+                {{ form.timerem(class="form-control form-control-lg", placeholder="Enter time per person") }}
+            </div>        
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </fieldset>
+    </form>
+</div>
+<div class="border-top pt-3">
+    <small class="test-muted">
+        <a class="ml-2" href="{{ url_for('home') }}">Back to Home</a>
+    </small>
+</div>
+{% endblock content %}

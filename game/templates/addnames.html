@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="content-section">
+            <form method="POST" action="" id="data">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                    <h4><label class="form-control-label">Add Names</label></h4>
+                    {% for num in range(names_per) %}
+                    <div class="form-group">
+                        <input name="guess_name[]" class="form-control form-control-lg">
+                        </div>
+                    {% endfor %}
+                </fieldset>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>                
+            </form>
+        </div>
+    </div>
+</div>
+<div class="border-top pt-3">
+    <small class="test-muted">
+        <a class="ml-2" href="{{ url_for('home', room=room) }}">Back to Home</a>
+    </small>
+</div>
+
+{% endblock content %}
+{% block scripts %}
+{% endblock scripts %}
